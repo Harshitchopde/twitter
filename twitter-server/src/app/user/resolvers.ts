@@ -1,4 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import axios from "axios" 
+import { prismaClient } from "../../clients/db";
+import JWTService from "../../services/jwt";
 
 interface GoogleTokenResult {
     iss?: string;
@@ -24,13 +27,32 @@ const queries = {
         const GoogleToken = token;
         const GoogleOuthURL = new URL("https://oauth2.googleapis.com/tokeninfo");
         GoogleOuthURL.searchParams.set("id_token",GoogleToken);
+        // console.log(GoogleOuthURL.toString())
         const {data} = await axios.get<GoogleTokenResult>(GoogleOuthURL.toString(),{
             responseType:"json"
         })
-        console.log(data.email_verified)
+       
+        const user = await prismaClient.user.findUnique({
+            where:{email:data.email},
+        })
+
+        // if user not exist then create
+        if(!user){
+            await prismaClient.user.create({
+                data:{
+                    email:data.email,
+                    firstName:data.given_name,
+                    profilePic: data.picture,
+                }
+            })
+
+        }
+        const userDb = await prismaClient.user.findUnique({where: {email:data.email}});
+        if(!userDb) throw new Error("User not found with this email-> "+data.email)
+        const jwtToken = JWTService.generateTokenForUser(userDb);
 
 
-        return "token recieved"
+        return jwtToken;
     },
  
 }
