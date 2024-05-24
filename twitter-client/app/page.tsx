@@ -68,7 +68,9 @@ export default function Home() {
     console.log(verifyGoogleToken)
     toast.success("Login Successfull",{duration:4000,position:"top-center"})
     // return verifyGoogleToken;
-    
+    if(verifyGoogleToken){
+      window.localStorage.setItem("__twitter_token",verifyGoogleToken);
+    }
     
   },[])
   return (
