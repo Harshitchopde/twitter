@@ -1,7 +1,16 @@
+import { useCreateTweets } from '@/hooks/tweer';
 import Image from 'next/image';
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { AiOutlinePicture } from "react-icons/ai";
 const CreatePost:React.FC = ()=>{
+    const [content,setContent] = useState('');
+    const { mutate} = useCreateTweets();
+    const handleCreateTweetBtn = useCallback(()=>{
+        mutate({
+            content,
+        })
+      
+    },[mutate,content])
     const handleSelectImage = useCallback(()=>{
         const input = document.createElement("input");
         input.setAttribute("type","file")
@@ -17,13 +26,18 @@ const CreatePost:React.FC = ()=>{
             <Image src="https://avatars.githubusercontent.com/u/109473586?v=4" className=' rounded-full' alt='avater-img' height={50} width={50}/>
             </div>
         </div>
-        <textarea className=' w-full col-span-11   text-2xl pt-2 bg-transparent outline-none' placeholder='What is happening?!' rows={4}/>
+        <textarea
+         content={content}
+         onChange={(e)=>setContent(e.target.value)}
+         className=' w-full col-span-11   text-2xl pt-2 bg-transparent outline-none' placeholder='What is happening?!' rows={4}/>
 
 
     </div>
     <div className=" flex   px-6 my-3   items-center justify-between">
         <AiOutlinePicture onClick={handleSelectImage} className=' text-2xl    ml-11 text-blue-500 cursor-pointer'/>
-        <button className="bg-[#1D9BF0]  px-6 py-3 text-[20px] rounded-full mt-2   opacity-40 font-bold">Post</button>
+        <button 
+        onClick={handleCreateTweetBtn}
+        className="bg-[#1D9BF0]  px-6 py-3 text-[20px] rounded-full mt-2   opacity-40 font-bold">Post</button>
 
     </div>
     </div>

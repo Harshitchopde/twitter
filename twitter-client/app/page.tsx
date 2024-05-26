@@ -10,13 +10,15 @@ import { LuMessageSquare } from "react-icons/lu";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import {CredentialResponse, GoogleLogin} from "@react-oauth/google"
 import FeedCard from "@/components/FeedCards";
-import { use, useCallback } from "react";
+import { use, useCallback, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import { graphqlClient } from "@/clients/api";
 import { verifyGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
 import CreatePost from "@/components/CreatePost";
+import { useGetAllTweets } from "@/hooks/tweer";
+import { Tweet } from "@/gql/graphql";
 interface TwitterSideBar{
   title:string;
   icon:React.ReactNode;
@@ -65,8 +67,10 @@ const sideBarMenuItems:TwitterSideBar[]=[
 ]
 export default function Home() {
   const {user} = useCurrentUser()
-  const queryClient=useQueryClient()
-  console.log(user+"d")
+  const queryClient=useQueryClient();
+
+  // console.log(user+"d")
+  const {tweets} = useGetAllTweets();
   const handleLoginWithGoogle = useCallback(async(cred:CredentialResponse)=>{
     console.log("Google login")
     const googleToken = cred.credential;
@@ -109,21 +113,10 @@ export default function Home() {
       </div>
       <div className=" col-span-6 border-x-[1px]   h-screen overflow-y-scroll  border-x-gray-600" >
         <CreatePost/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
-        <FeedCard/>
+        {
+          tweets?.map(tweets =>  <FeedCard key={tweets?.id} data={tweets as Tweet}/>)
+        }
+       
       </div>
       <div className=" col-span-3 p-5">
        {!user && <div className="border p-5 bg-slate-700 rounded-xl  text-center">
