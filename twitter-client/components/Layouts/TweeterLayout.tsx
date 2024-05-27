@@ -67,9 +67,9 @@ interface TwitterSideBar {
   ]
 
 const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
-    const { user } = useCurrentUser()
-
+    
     const queryClient = useQueryClient();
+    const { user } = useCurrentUser()
     const handleLoginWithGoogle = useCallback(async (cred: CredentialResponse) => {
         console.log("Google login")
         const googleToken = cred.credential;
@@ -86,8 +86,8 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
     return (
         <div>
 
-            <div className="grid grid-cols-12  w-screen h-screen px-56 relative">
-                <div className=" col-span-3  relative ">
+            <div className="grid grid-cols-12  w-screen h-screen sm:px-56 relative">
+                <div className=" col-span-2 sm:col-span-3   relative ">
                     <div className="  hover:bg-slate-900 transition-all cursor-pointer mt-8 h-fit w-fit text-3xl rounded-full p-3 px-5">
                         <FaTwitter />
                     </div>
@@ -96,14 +96,15 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
                         {sideBarMenuItems.map(item => {
                             return (<li key={item.title} className="flex gap-6 align-middle hover:bg-gray-800 w-fit px-4 py-3 rounded-full">
                                 <span className="text-4xl">{item.icon}</span>
-                                <span className=" text-2xl">{item.title}</span></li>)
+                                <span className=" hidden sm:block text-2xl">{item.title}</span></li>)
                         }
                         )}
                     </ul>
-                    <button className="bg-[#1D9BF0]  px-32 py-3 text-[20px] rounded-full mt-2 hover:opacity-90 font-bold">Post</button>
+                    <button className="bg-[#1D9BF0] hidden sm:block px-32 py-3 text-[20px] rounded-full mt-2 hover:opacity-90 font-bold">Post</button>
+                    <button className="bg-[#1D9BF0] block sm:hidden   px-3 py-3 text-[20px] rounded-full mt-2 hover:opacity-90 font-bold"> <FaTwitter /></button>
                     {user && <div className="flex hover:bg-slate-900 rounded-xl  cursor-pointer w-4/5 absolute bottom-4   p-2">
                         {user.profilePic && <Image src={user.profilePic} width={50} height={50} className=" rounded-full" alt="No Image Found!" />}
-                        <div className=" pl-4   text-center  flex-col   align-middle font-extrabold   text-lg">
+                        <div className=" hidden sm:block pl-4   text-center  flex-col   align-middle font-extrabold   text-lg">
                             <h3 >{user.firstName}</h3>
                             <h3>{user.lastName}</h3>
                         </div>
@@ -111,10 +112,10 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
                     </div>}
 
                 </div>
-                <div className=" col-span-6 border-x-[1px]   h-screen overflow-y-scroll  border-x-gray-600" >
+                <div className=" col-span-9 sm:col-span-6 border-x-[1px]   h-screen overflow-y-scroll  border-x-gray-600" >
                   {props.children}
                 </div>
-                <div className=" col-span-3 p-5">
+                <div className=" sm:col-span-3 p-5">
                     {!user && <div className="border p-5 bg-slate-700 rounded-xl  text-center">
                         <h1 className=" text-black   font-bold p-3">Login with Google</h1>
                         <div className=" pl-10">
