@@ -62,13 +62,17 @@ const queries = {
         if(!id)return null
         const resUser = await prismaClient.user.findUnique({where:{id}});
         if(!resUser) return "User Not Found!"
-        return resUser
+        return resUser 
+    },
+    getUserById: async (parent:any, {id}:{id:string},ctx:GraphqlContext)=>{
+        return await prismaClient.user.findUnique({where:{id}});
     }
  
 }
 const extraQueryResolver = {
     User:{
-        tweets:(parent:User)=> prismaClient.tweet.findMany({where:{id:parent.id}})
+        // tweets:(parent:User)=> prismaClient.tweet.findMany({where:{id:parent.id}})
+        tweets:(parent:User)=> prismaClient.tweet.findMany({where:{authorId:parent.id}})
     }
 }
 export const resolvers = {queries,extraQueryResolver}

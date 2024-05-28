@@ -8,13 +8,45 @@ query Query($token: String!) {
 `)
 export const getCurrentUserQuery = graphql(` 
 query GetCurrentUser {
-    getCurrentUser {
+  getCurrentUser {
+    id
+    firstName
+    lastName
+    email
+    profilePic
+    tweets {
+      content
       id
-      firstName
-      lastName
-      profilePic
-      email
+      imageURL
+      author {
+        profilePic
+        firstName
+        id
+      }
+      
     }
   }
+}
 
+`)
+export const getUserById = graphql(`
+
+query GetUserById($id: ID!) {
+  getUserById(id: $id) {
+    id
+    firstName
+    lastName
+    
+    tweets {
+      id
+      content
+      author {
+        id
+        firstName
+        lastName
+        profilePic
+      }
+    }
+  }
+}
 `)

@@ -4,6 +4,8 @@ import CreatePost from "@/components/CreatePost";
 import { useGetAllTweets } from "@/hooks/tweer";
 import { Tweet } from "@/gql/graphql";
 import TweeterLayout from "@/components/Layouts/TweeterLayout";
+import { GetServerSideProps } from "next";
+
 
 export default function Home() {
   
@@ -24,4 +26,10 @@ export default function Home() {
        </TweeterLayout>
     </div>
   );
+}
+export const getServerSideProps:GetServerSideProps = async(context)=>{
+
+  return {
+    props:{},
+  }
 }
