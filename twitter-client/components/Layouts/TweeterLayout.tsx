@@ -18,6 +18,7 @@ import { verifyGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from 'next/link';
+import { link } from 'fs';
 
 interface TweeterLayoutProps {
   children: React.ReactNode,
@@ -31,7 +32,7 @@ interface TwitterSideBar {
 const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
-
+  // console.log("USer: ",user)
   const sideBarMenuItems: TwitterSideBar[] = useMemo(() => [
     {
       title: "Home",
@@ -76,7 +77,7 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
     {
       title: "Profile",
       icon: <IoPersonOutline />,
-      link: `/user/${user?.id}`
+      link: `/${user?.id}`
     },
     {
       title: "More",
@@ -84,7 +85,8 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
       link: "/"
     },
   ]
-    , []);
+    , [user?.id]);
+    // console.log(sideBarMenuItems)
 
   const handleLoginWithGoogle = useCallback(async (cred: CredentialResponse) => {
     console.log("Google login")
@@ -111,10 +113,9 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
           <ul>
             {sideBarMenuItems.map(item => {
               return (
-                <Link href={item.link} key={item.title}>
-                  <li key={item.title} className="flex gap-6 align-middle hover:bg-gray-800 w-fit px-4 py-3 rounded-full">
+                <Link href={item.link} key={item.title} className="flex gap-6 align-middle hover:bg-gray-800 w-fit px-4 py-3 rounded-full">
                     <span className="text-4xl">{item.icon}</span>
-                    <span className=" hidden sm:block text-2xl">{item.title}</span></li>
+                    <span className=" hidden sm:block text-2xl">{item.title}</span>
                 </Link>
               )
             }

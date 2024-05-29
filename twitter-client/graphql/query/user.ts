@@ -30,22 +30,22 @@ query GetCurrentUser {
 
 `)
 export const getUserById = graphql(`
-
 query GetUserById($id: ID!) {
   getUserById(id: $id) {
     id
     firstName
     lastName
-    
+    profilePic
     tweets {
       id
       content
       author {
-        id
+        profilePic
         firstName
         lastName
-        profilePic
+        id
       }
+      imageURL
     }
   }
 }

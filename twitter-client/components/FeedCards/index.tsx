@@ -5,12 +5,14 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { FiMessageCircle } from 'react-icons/fi';
 import { FaRetweet } from 'react-icons/fa6';
 import { Tweet } from '@/gql/graphql';
+import Link from 'next/link';
 
 interface FeedCardProbs{
     data: Tweet
 }
 const FeedCard: React.FC<FeedCardProbs> =(props)=>{
     const {data} = props
+    // console.log("dddd :",data)
     return <div  className='grid   grid-cols-12 border border-gray-800 p-4 cursor-pointer'>
         <div className=" col-span-1">
             <div className="">
@@ -18,7 +20,7 @@ const FeedCard: React.FC<FeedCardProbs> =(props)=>{
             </div>
         </div>
         <div className="col-span-11">
-            <h3 className=' font-bold text-[20px] justify-start'>{data.author.firstName +" "+data.author.lastName}</h3>
+            <Link href={`${data.author.id}`} className=' font-bold text-[20px] justify-start'>{data.author.firstName +" "+data.author.lastName}</Link>
             <p>
             {data.content}
             </p>

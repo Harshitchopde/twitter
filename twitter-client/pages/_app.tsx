@@ -11,8 +11,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient()
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <html lang="en">
-       <body className={quicksand.className}>
+    
+       <div className={quicksand.className}>
       <Provider>
         <GoogleOAuthProvider clientId="your-client-id-here">
           <QueryClientProvider client={queryClient}>
@@ -24,8 +24,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           </QueryClientProvider>
         </GoogleOAuthProvider>
       </Provider>
-      </body>
-      
-    </html>
+      </div>
+
   );
 }
