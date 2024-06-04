@@ -140,7 +140,7 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
           {!user && <div className="border p-5 bg-slate-700 rounded-xl  text-center">
             <h1 className=" text-black   font-bold p-3">Login with Google</h1>
             <div className=" pl-10">
-              <GoogleLogin onSuccess={handleLoginWithGoogle} />
+              <GoogleLogin onError={()=>console.log("error : ")} onSuccess={handleLoginWithGoogle} />
             </div>
           </div>}
         </div>

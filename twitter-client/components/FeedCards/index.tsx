@@ -12,7 +12,7 @@ interface FeedCardProbs{
 }
 const FeedCard: React.FC<FeedCardProbs> =(props)=>{
     const {data} = props
-    // console.log("dddd :",data)
+    console.log("dddd :",data)
     return <div  className='grid   grid-cols-12 border border-gray-800 p-4 cursor-pointer'>
         <div className=" col-span-1">
             <div className="">
@@ -20,10 +20,13 @@ const FeedCard: React.FC<FeedCardProbs> =(props)=>{
             </div>
         </div>
         <div className="col-span-11">
-            <Link href={`${data.author.id}`} className=' font-bold text-[20px] justify-start'>{data.author.firstName +" "+data.author.lastName}</Link>
+            <Link href={`${data.author.id}`} className=' font-bold text-[20px] justify-start'>{data.author.firstName}</Link>
             <p>
             {data.content}
             </p>
+            {
+                data.imageURL && <Image className="my-4" src={data.imageURL} alt='Not found!'  width={600} height={300}/>
+            }
             <div className=" flex text-2xl justify-between pr-12 pt-5">
                 <div className='   hover:bg-[#172554]  hover:bg-opacity-50 hover:text-blue-500 rounded-full p-1'>
                     <FiMessageCircle/>

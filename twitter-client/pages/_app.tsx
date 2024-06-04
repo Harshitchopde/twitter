@@ -9,12 +9,13 @@ const quicksand = Quicksand({subsets:["latin"]});
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient()
+import  "dotenv/config"
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     
        <div className={quicksand.className}>
       <Provider>
-        <GoogleOAuthProvider clientId="your-client-id-here">
+        <GoogleOAuthProvider clientId="902232405002-kavrcv9scaobhtgufveegorqpviepq92.apps.googleusercontent.com">
           <QueryClientProvider client={queryClient}>
            
               <Component {...pageProps} />
