@@ -14,7 +14,8 @@ interface ServerPropsTweets{
 
 export default function Home(props:ServerPropsTweets) {
 
-    const { tweets } = props
+    // const { tweets } = props
+    const {tweets = props.tweets} = useGetAllTweets();
 
   // console.log(user+"d")
 

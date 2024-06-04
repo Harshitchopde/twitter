@@ -1,23 +1,24 @@
 import { graphqlClient } from '@/clients/api';
 import { getSignedURLForTweetQuery } from '@/graphql/query/tweet';
-import { useCreateTweets } from '@/hooks/tweer';
+import { useCreateTweets, useGetAllTweets } from '@/hooks/tweer';
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useCallback, useState } from 'react'
 import toast from 'react-hot-toast';
 import { AiOutlinePicture } from "react-icons/ai";
 const CreatePost:React.FC = ()=>{
-    const [content,setContent] = useState('');
-    const { mutate} = useCreateTweets();
+    const { mutateAsync} = useCreateTweets();
+    
+    const [content,setContent] = useState("");
     const [imageURL,setImage] = useState("");
-    const handleCreateTweetBtn =useCallback(()=>{
-            mutate({
+    const handleCreateTweetBtn =useCallback(async ()=>{
+          await mutateAsync({
                 content,
                 imageURl:imageURL
             })
-            // setContent('')
-            // setImage('')
-        },[mutate,content,imageURL,setContent,setImage])
+            setContent("")
+            setImage("")
+        },[mutateAsync,content,imageURL])
        
 
    
@@ -74,7 +75,7 @@ const CreatePost:React.FC = ()=>{
         </div>
         <div className="className=' w-full col-span-11    text-2xl pt-2 ' ">
         <textarea
-         content={content}
+         value={content}
          className='outline-none bg-transparent '
          onChange={(e)=>setContent(e.target.value)}
          placeholder='What is happening?!' rows={4}></textarea>
