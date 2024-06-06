@@ -26,14 +26,38 @@ const queries = {
     }
  
 }
+const mutations = {
+    followUser:async(
+        parent:any,
+        {to}:{to:string}
+        ,ctx:GraphqlContext
+    )=>{
+        if(!ctx.user)throw new Error("User is not Authenticated")
+        await UserService.followUser(ctx.user.id,to)
+    return true
+    },
+    unfollowUser: async(parent:any,{to}:{to:string},ctx:GraphqlContext)=>{
+        if(!ctx.user || !ctx.user.id)throw new Error("User is Not Authenticated")
+        await UserService.unfollowUser(ctx.user?.id,to)
+    return true
+    }
+}
 const extraQueryResolver = {
     User:{
         // tweets:(parent:User)=> prismaClient.tweet.findMany({where:{id:parent.id}})
         // tweets:(parent:User)=> prismaClient.tweet.findMany({where:{authorId:parent.id}})
-        tweets:(parent:User) =>  TweetService.getManyByParentId(parent.id)
+        tweets:(parent:User) =>  TweetService.getManyByParentId(parent.id),
+        followers:async(parent:User)=> {
+            const res = await prismaClient.follows.findMany({where:{following:{id:parent.id}},include:{follower:true}});
+            return res.map(el=> el.follower);
+        },
+        following:async (parent:User)=>{
+            const res = await prismaClient.follows.findMany({ where:{follower:{id:parent.id}},include:{following:true}})
+            return res.map(el=> el.following)
+        }
     }
 }
-export const resolvers = {queries,extraQueryResolver}
+export const resolvers = {queries,extraQueryResolver,mutations}
 
    // haloChalo:async(parent:any ,{hello,kha}:{hello:string,kha:string})=>{
     //     return hello+" "+kha;

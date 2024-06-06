@@ -12,7 +12,6 @@ interface FeedCardProbs{
 }
 const FeedCard: React.FC<FeedCardProbs> =(props)=>{
     const {data} = props
-    console.log("dddd :",data)
     return <div  className='grid   grid-cols-12 border border-gray-800 p-4 cursor-pointer'>
         <div className=" col-span-1">
             <div className="">
