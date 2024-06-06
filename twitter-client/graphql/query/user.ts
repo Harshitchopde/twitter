@@ -24,6 +24,11 @@ query GetCurrentUser {
       firstName
       profilePic
     }
+     recommendation {
+       firstName
+       id
+       profilePic  
+      }
     tweets {
       content
       id

@@ -137,12 +137,32 @@ const TweeterLayout: React.FC<TweeterLayoutProps> = (props) => {
           {props.children}
         </div>
         <div className=" sm:col-span-3 p-5">
-          {!user && <div className="border p-5 bg-slate-700 rounded-xl  text-center">
+          {!user ? <div className="border p-5 bg-slate-700 rounded-xl  text-center">
             <h1 className=" text-black   font-bold p-3">Login with Google</h1>
             <div className=" pl-10">
               <GoogleLogin onError={()=>console.log("error : ")} onSuccess={handleLoginWithGoogle} />
             </div>
-          </div>}
+          </div>:
+            <div className=" bg-slate-600  rounded-lg py-4   px-3">
+            <h1 className=' text-2xl my-2'>User You May Know</h1>
+            {
+            user?.recommendation?.map(ele=>{
+              return <div className="flex items-center  gap-3 mt-5 justify-between"  key={ele?.id}>
+                <div className="gap-3 flex items-center">
+                {
+                  ele?.profilePic && <Image src={ele.profilePic} alt='not found!' className='rounded-full' width={50} height={50}/>
+                }
+                {ele?.firstName}
+                </div>
+                <Link href={`/${ele?.id}`} className=' bg-white text-black rounded-full  px-3 py-1'>View</Link>
+
+              </div>
+            })
+          }
+          </div>
+          }
+        
+          
         </div>
       </div>
     </div>
