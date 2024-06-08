@@ -1,6 +1,7 @@
 import axios from "axios";
 import { prismaClient } from "../clients/db";
 import JWTService from "./jwt";
+import { redisClient } from "../clients/redis";
 interface GoogleTokenResult {
     iss?: string;
     azp?: string;
@@ -40,9 +41,15 @@ class UserService{
 
     }
     public static async getUserByEmail(email:string){
-        return await prismaClient.user.findUnique({
+        const cashedValue = await redisClient.get(`USER_BY_EMAIL:${email}`)  
+        if(cashedValue){
+           return JSON.parse(cashedValue);
+        } 
+        const user =  await prismaClient.user.findUnique({
             where:{email:email}
         })
+        await redisClient.set(`USER_BY_EMAIL:${email}`,JSON.stringify(user))
+        return user;
     }
     public static async createUser(email:string,firstName:string,profilePic:string){
         return await prismaClient.user.create({
@@ -54,20 +61,31 @@ class UserService{
         })
     }
     public static async getUserById(id:string){
-        return await prismaClient.user.findUnique({where:{id:id}});
+    
+         const cashedValue = await redisClient.get(`USER_BY_ID:${id}`)  
+         if(cashedValue){
+            return JSON.parse(cashedValue);
+         } 
+        const user =  await prismaClient.user.findUnique({where:{id:id}});
+        await redisClient.set(`USER_BY_ID:${id}`,JSON.stringify(user))
+        return user;
     }
-    public static followUser(from:string,to:string){
-        return prismaClient.follows.create({
+    public static  async followUser(from:string,to:string){
+        const user =  prismaClient.follows.create({
             data:{
                 follower:{connect:{id:from}},
                 following:{ connect: {id :to}}
             }
         })
+        await  redisClient.del(`RECOMMENDATION:${from}`)
+        return user;
     }
-    public static unfollowUser(from:string,to:string){
-        return prismaClient.follows.delete({
+    public static  async unfollowUser(from:string,to:string){
+        const user =  prismaClient.follows.delete({
             where :{ followerId_followingId:{ followerId:from, followingId:to}}
         })
+        await  redisClient.del(`RECOMMENDATION:${from}`)
+        return user;
     }
 }
 export default UserService;

@@ -5,6 +5,7 @@ import JWTService from "../../services/jwt";
 import { GraphqlContext } from "../../interfaces";
 import UserService from "../../services/User";
 import TweetService from "../../services/Tweet";
+import { redisClient } from "../../clients/redis";
 
 
 
@@ -49,14 +50,21 @@ const extraQueryResolver = {
         tweets:(parent:User) =>  TweetService.getManyByParentId(parent.id),
         followers:async(parent:User)=> {
             const res = await prismaClient.follows.findMany({where:{following:{id:parent.id}},include:{follower:true}});
+           
             return res.map(el=> el.follower);
         },
         following:async (parent:User)=>{
             const res = await prismaClient.follows.findMany({ where:{follower:{id:parent.id}},include:{following:true}})
+           
             return res.map(el=> el.following)
         },
         recommendation:async (parent:User,_:any,ctx:GraphqlContext)=>{
             if(!ctx.user)return []
+            const cashedValue = await redisClient.get(`RECOMMENDATION:${ctx.user.id}`)
+            if(cashedValue) {
+                // console.log("cashed value")
+                return JSON.parse(cashedValue)
+            }
             const myFollowing = await prismaClient.follows.findMany(
                 {
                     where:{follower:{id:ctx.user.id}},
@@ -81,6 +89,8 @@ const extraQueryResolver = {
                     }
                 }
             }
+            // console.log("Not chased")
+            await redisClient.set(`RECOMMENDATION:${ctx.user.id}`,JSON.stringify(user));
             return user;
         }
     }
